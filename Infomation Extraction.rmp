@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?><process version="9.10.001">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="9.10.001" expanded="true" name="Process">
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="2001"/>
+    <parameter key="send_mail" value="never"/>
+    <parameter key="notification_email" value=""/>
+    <parameter key="process_duration_for_mail" value="30"/>
+    <parameter key="encoding" value="SYSTEM"/>
+    <process expanded="true">
+      <operator activated="true" class="text:create_document" compatibility="9.4.000" expanded="true" height="68" name="Create Document" width="90" x="112" y="136">
+        <parameter key="text" value="please turn of your cell phone&#10;Why don't you wait 'til at least wednesday to see if you get your .&#10;I acted like i'd be interested in buying something else next week and he gave it to us for free"/>
+        <parameter key="add label" value="false"/>
+        <parameter key="label_type" value="nominal"/>
+      </operator>
+      <operator activated="true" class="text:tokenize" compatibility="9.4.000" expanded="true" height="68" name="Tokenize" width="90" x="246" y="136">
+        <parameter key="mode" value="linguistic tokens"/>
+        <parameter key="characters" value=".:"/>
+        <parameter key="language" value="English"/>
+        <parameter key="max_token_length" value="3"/>
+      </operator>
+      <operator activated="true" class="text:generate_n_grams_terms" compatibility="9.4.000" expanded="true" height="68" name="Generate n-Grams (Terms)" width="90" x="648" y="238">
+        <parameter key="max_length" value="3"/>
+      </operator>
+      <connect from_op="Create Document" from_port="output" to_op="Tokenize" to_port="document"/>
+      <connect from_op="Tokenize" from_port="document" to_op="Generate n-Grams (Terms)" to_port="document"/>
+      <connect from_op="Generate n-Grams (Terms)" from_port="document" to_port="result 1"/>
+      <portSpacing port="source_input 1" spacing="0"/>
+      <portSpacing port="sink_result 1" spacing="0"/>
+      <portSpacing port="sink_result 2" spacing="0"/>
+    </process>
+  </operator>
+</process>

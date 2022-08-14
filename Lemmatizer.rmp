@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?><process version="9.10.001">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="9.10.001" expanded="true" name="Process">
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="2001"/>
+    <parameter key="send_mail" value="never"/>
+    <parameter key="notification_email" value=""/>
+    <parameter key="process_duration_for_mail" value="30"/>
+    <parameter key="encoding" value="SYSTEM"/>
+    <process expanded="true">
+      <operator activated="true" class="retrieve" compatibility="9.10.001" expanded="true" height="68" name="Retrieve Products" width="90" x="112" y="136">
+        <parameter key="repository_entry" value="//Samples/data/Products"/>
+      </operator>
+      <operator activated="true" class="MeaningCloud:lemmatizer_operator_key" compatibility="2.1.000" expanded="true" height="82" name="Lemmatizer" width="90" x="313" y="136">
+        <parameter key="Attribute" value="Product Name"/>
+        <parameter key="Text language" value="en"/>
+        <parameter key="Unknown words" value="false"/>
+        <parameter key="Relaxed typography" value="false"/>
+        <parameter key="User dictionaries" value=""/>
+        <parameter key="Keep stopwords" value="false"/>
+        <parameter key="Keep weights" value="false"/>
+      </operator>
+      <connect from_op="Retrieve Products" from_port="output" to_op="Lemmatizer" to_port="input"/>
+      <connect from_op="Lemmatizer" from_port="output" to_port="result 1"/>
+      <portSpacing port="source_input 1" spacing="0"/>
+      <portSpacing port="sink_result 1" spacing="0"/>
+      <portSpacing port="sink_result 2" spacing="0"/>
+    </process>
+  </operator>
+</process>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?><process version="9.10.001">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="9.10.001" expanded="true" name="Process">
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="2001"/>
+    <parameter key="send_mail" value="never"/>
+    <parameter key="notification_email" value=""/>
+    <parameter key="process_duration_for_mail" value="30"/>
+    <parameter key="encoding" value="SYSTEM"/>
+    <process expanded="true">
+      <operator activated="true" class="text:create_document" compatibility="9.4.000" expanded="true" height="68" name="Create Document" width="90" x="112" y="85">
+        <parameter key="text" value="I love dogs&#10;"/>
+        <parameter key="add label" value="false"/>
+        <parameter key="label_type" value="nominal"/>
+      </operator>
+      <operator activated="true" class="text:create_document" compatibility="9.4.000" expanded="true" height="68" name="Create Document (2)" width="90" x="112" y="187">
+        <parameter key="text" value="I hate dogs and knitting&#10;"/>
+        <parameter key="add label" value="false"/>
+        <parameter key="label_type" value="nominal"/>
+      </operator>
+      <operator activated="true" class="text:create_document" compatibility="9.4.000" expanded="true" height="68" name="Create Document (3)" width="90" x="112" y="289">
+        <parameter key="text" value="knitting is my hobby and passion&#10;"/>
+        <parameter key="add label" value="false"/>
+        <parameter key="label_type" value="nominal"/>
+      </operator>
+      <operator activated="true" class="text:process_documents" compatibility="9.4.000" expanded="true" height="145" name="Process Documents" width="90" x="313" y="136">
+        <parameter key="create_word_vector" value="true"/>
+        <parameter key="vector_creation" value="TF-IDF"/>
+        <parameter key="add_meta_information" value="true"/>
+        <parameter key="keep_text" value="false"/>
+        <parameter key="prune_method" value="none"/>
+        <parameter key="prune_below_percent" value="3.0"/>
+        <parameter key="prune_above_percent" value="30.0"/>
+        <parameter key="prune_below_rank" value="0.05"/>
+        <parameter key="prune_above_rank" value="0.95"/>
+        <parameter key="datamanagement" value="double_sparse_array"/>
+        <parameter key="data_management" value="auto"/>
+        <process expanded="true">
+          <operator activated="true" class="text:tokenize" compatibility="9.4.000" expanded="true" height="68" name="Tokenize" width="90" x="112" y="85">
+            <parameter key="mode" value="non letters"/>
+            <parameter key="characters" value=".:"/>
+            <parameter key="language" value="English"/>
+            <parameter key="max_token_length" value="3"/>
+          </operator>
+          <operator activated="true" class="text:transform_cases" compatibility="9.4.000" expanded="true" height="68" name="Transform Cases" width="90" x="246" y="85">
+            <parameter key="transform_to" value="lower case"/>
+          </operator>
+          <connect from_port="document" to_op="Tokenize" to_port="document"/>
+          <connect from_op="Tokenize" from_port="document" to_op="Transform Cases" to_port="document"/>
+          <connect from_op="Transform Cases" from_port="document" to_port="document 1"/>
+          <portSpacing port="source_document" spacing="0"/>
+          <portSpacing port="sink_document 1" spacing="0"/>
+          <portSpacing port="sink_document 2" spacing="0"/>
+        </process>
+      </operator>
+      <operator activated="true" class="generate_tfidf" compatibility="9.10.001" expanded="true" height="82" name="Generate TFIDF" width="90" x="571" y="187">
+        <parameter key="calculate_term_frequencies" value="true"/>
+      </operator>
+      <connect from_op="Create Document" from_port="output" to_op="Process Documents" to_port="documents 1"/>
+      <connect from_op="Create Document (2)" from_port="output" to_op="Process Documents" to_port="documents 2"/>
+      <connect from_op="Create Document (3)" from_port="output" to_op="Process Documents" to_port="documents 3"/>
+      <connect from_op="Process Documents" from_port="example set" to_op="Generate TFIDF" to_port="example set input"/>
+      <connect from_op="Process Documents" from_port="word list" to_port="result 1"/>
+      <connect from_op="Generate TFIDF" from_port="example set output" to_port="result 2"/>
+      <portSpacing port="source_input 1" spacing="0"/>
+      <portSpacing port="sink_result 1" spacing="0"/>
+      <portSpacing port="sink_result 2" spacing="0"/>
+      <portSpacing port="sink_result 3" spacing="0"/>
+    </process>
+  </operator>
+</process>
